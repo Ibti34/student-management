@@ -9,13 +9,10 @@ import { Link } from '@inertiajs/vue3';
             <Link href="/">Home</Link>
 
             <Link href="/about">About</Link>
-
-            <Link href="/student">Student</Link>
+            <Link href="/students/create">Add Student</Link>
 
             <Link href="/students">Students List</Link>
-            <Link href="/students/create">Add Student</Link>
         </div>
-
         <!-- PAGE CONTENT -->
         <div class="p-6">
             <slot />

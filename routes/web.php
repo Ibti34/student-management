@@ -13,17 +13,10 @@ Route::get('dashboard', function () {
 
 require __DIR__ . '/settings.php';
 Route::get('/about', function () {
-    return Inertia::render('About', [
-        'name' => 'Ibtisam kedir',
-        'email' => 'ibtisamkedir076@example.com',
-        'age' => 22,
-        'university' => 'Arbaminch University',
-    ]);
+    return Inertia::render('About');
 });
 
-Route::get('/student', function () {
-    return Inertia::render('Student');
-});
+
 
 Route::post('/student', function () {
 
