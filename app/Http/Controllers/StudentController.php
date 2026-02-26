@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Student;
 
+
 class StudentController extends Controller
 {
     public function index()
@@ -27,5 +28,10 @@ class StudentController extends Controller
         Student::create($data);
 
         return redirect('/students');
+    }
+
+    public function create()
+    {
+        return Inertia::render('Students/Create');
     }
 }

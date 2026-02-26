@@ -39,7 +39,10 @@ Route::get('/', function () {
     return Inertia::render('Home');
 });
 
-Route::get('/students/create', [StudentController::class, 'create']);
 
 Route::get('/students', [StudentController::class, 'index'])
     ->name('students.Index');
+
+Route::get('/students/create', [StudentController::class, 'create']);
+
+Route::post('/students', [StudentController::class, 'store']);

@@ -13,6 +13,7 @@ import { Link } from '@inertiajs/vue3';
             <Link href="/student">Student</Link>
 
             <Link href="/students">Students List</Link>
+            <Link href="/students/create">Add Student</Link>
         </div>
 
         <!-- PAGE CONTENT -->
