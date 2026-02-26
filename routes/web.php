@@ -3,12 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+use App\Http\Controllers\StudentController;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('home');
+
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
@@ -41,3 +38,8 @@ Route::get('/contact', function () {
 Route::get('/', function () {
     return Inertia::render('Home');
 });
+
+Route::get('/students/create', [StudentController::class, 'create']);
+
+Route::get('/students', [StudentController::class, 'index'])
+    ->name('students.Index');
