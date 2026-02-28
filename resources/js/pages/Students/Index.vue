@@ -42,6 +42,11 @@ defineProps({
                     <td class="border p-2">
                         {{ student.university }}
                     </td>
+                    <td>
+                        <a :href="'/students/' + student.id + '/edit'">
+                            Edit
+                        </a>
+                    </td>
                 </tr>
             </tbody>
         </table>

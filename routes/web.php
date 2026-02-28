@@ -7,6 +7,10 @@ use App\Http\Controllers\StudentController;
 
 
 
+Route::get('/', function () {
+    return Inertia::render('Home');
+});
+
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -28,7 +32,7 @@ Route::get('/contact', function () {
 });
 
 
-Route::get('/', function () {
+Route::get('/home', function () {
     return Inertia::render('Home');
 });
 
@@ -39,3 +43,6 @@ Route::get('/students', [StudentController::class, 'index'])
 Route::get('/students/create', [StudentController::class, 'create']);
 
 Route::post('/students', [StudentController::class, 'store']);
+
+Route::get('/students/{student}/edit', [StudentController::class, 'edit'])
+    ->name('students.edit');
