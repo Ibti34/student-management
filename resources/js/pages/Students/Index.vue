@@ -1,54 +1,73 @@
 <script setup>
-import AppLayout from '../../layouts/AppLayout.vue';
+import AppLayout from '../../layouts/AppLayout.vue'
+import { router, Link } from '@inertiajs/vue3'
 
 defineProps({
     students: Array,
-});
+})
+
+const deleteStudent = (id) => {
+    if (confirm('Are you sure you want to delete this student?')) {
+        router.delete(`/students/${id}`)
+    }
+}
 </script>
 
 <template>
     <AppLayout>
-        <h1 class="mb-4 text-2xl font-bold">Students List</h1>
+        <div class="p-6">
 
-        <table class="w-full border">
-            <thead class="bg-gray-200">
-                <tr>
-                    <th class="border p-2">ID</th>
-                    <th class="border p-2">Name</th>
-                    <th class="border p-2">Email</th>
-                    <th class="border p-2">Age</th>
-                    <th class="border p-2">University</th>
-                </tr>
-            </thead>
+            <h1 class="mb-6 text-3xl font-bold text-gray-800">
+                Students List
+            </h1>
 
-            <tbody>
-                <tr v-for="student in students" :key="student.id">
-                    <td class="border p-2">
-                        {{ student.id }}
-                    </td>
+            <div class="overflow-x-auto bg-white shadow rounded-xl">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-3">ID</th>
+                            <th class="p-3">Name</th>
+                            <th class="p-3">Email</th>
+                            <th class="p-3">Age</th>
+                            <th class="p-3">University</th>
+                            <th class="p-3 text-center">Actions</th>
+                        </tr>
+                    </thead>
 
-                    <td class="border p-2">
-                        {{ student.name }}
-                    </td>
+                    <tbody>
+                        <tr
+                            v-for="student in students"
+                            :key="student.id"
+                            class="border-t hover:bg-gray-50"
+                        >
+                            <td class="p-3">{{ student.id }}</td>
+                            <td class="p-3 font-medium">{{ student.name }}</td>
+                            <td class="p-3">{{ student.email }}</td>
+                            <td class="p-3">{{ student.age }}</td>
+                            <td class="p-3">{{ student.university }}</td>
 
-                    <td class="border p-2">
-                        {{ student.email }}
-                    </td>
+                            <td class="p-3 text-center space-x-2">
+                                <!-- Edit -->
+                                <Link
+                                    :href="`/students/${student.id}/edit`"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
+                                >
+                                    Edit
+                                </Link>
 
-                    <td class="border p-2">
-                        {{ student.age }}
-                    </td>
+                                <!-- Delete -->
+                                <button
+                                    @click="deleteStudent(student.id)"
+                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm"
+                                >
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                    <td class="border p-2">
-                        {{ student.university }}
-                    </td>
-                    <td>
-                        <a :href="'/students/' + student.id + '/edit'">
-                            Edit
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        </div>
     </AppLayout>
 </template>
