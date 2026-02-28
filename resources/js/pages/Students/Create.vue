@@ -15,58 +15,81 @@ function submit() {
 </script>
 
 <template>
-<AppLayout>
-<div class="p-6 max-w-lg">
+    <AppLayout>
+  <div class="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
 
-    <h1 class="text-2xl font-bold mb-6">Create Student</h1>
+    <div class="bg-white shadow-xl rounded-2xl w-full max-w-lg p-8">
 
-    <form @submit.prevent="submit" class="space-y-4">
+      <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+        Create Student
+      </h2>
+
+      <form @submit.prevent="submit" class="space-y-6">
 
         <!-- Name -->
         <div>
-            <input v-model="form.name" placeholder="Name"
-                class="border p-2 w-full rounded" />
-            <div v-if="form.errors.name" class="text-red-500 text-sm">
-                {{ form.errors.name }}
-            </div>
+          <label class="block text-sm font-medium text-gray-600 mb-2">
+            Name
+          </label>
+          <input
+            v-model="form.name"
+            type="text"
+            placeholder="Enter student name"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+          />
         </div>
 
         <!-- Email -->
         <div>
-            <input v-model="form.email" placeholder="Email"
-                class="border p-2 w-full rounded" />
-            <div v-if="form.errors.email" class="text-red-500 text-sm">
-                {{ form.errors.email }}
-            </div>
+          <label class="block text-sm font-medium text-gray-600 mb-2">
+            Email
+          </label>
+          <input
+            v-model="form.email"
+            type="email"
+            placeholder="Enter student email"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+          />
         </div>
 
         <!-- Age -->
         <div>
-            <input type="number" v-model="form.age" placeholder="Age"
-                class="border p-2 w-full rounded" />
-            <div v-if="form.errors.age" class="text-red-500 text-sm">
-                {{ form.errors.age }}
-            </div>
+          <label class="block text-sm font-medium text-gray-600 mb-2">
+            Age
+          </label>
+          <input
+            v-model="form.age"
+            type="number"
+            placeholder="Enter age"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+          />
         </div>
 
         <!-- University -->
         <div>
-            <input v-model="form.university" placeholder="University"
-                class="border p-2 w-full rounded" />
-            <div v-if="form.errors.university" class="text-red-500 text-sm">
-                {{ form.errors.university }}
-            </div>
+          <label class="block text-sm font-medium text-gray-600 mb-2">
+            University
+          </label>
+          <input
+            v-model="form.university"
+            type="text"
+            placeholder="Enter university name"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+          />
         </div>
 
+        <!-- Button -->
         <button
-            type="submit"
-            class="bg-green-500 text-white px-4 py-2 rounded"
+          type="submit"
+          class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition shadow-md"
         >
-            Save Student
+          Save Student
         </button>
 
-    </form>
+      </form>
 
-</div>
-</AppLayout>
+    </div>
+
+  </div>
+  </AppLayout>
 </template>
