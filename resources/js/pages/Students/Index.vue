@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue'
 import AppLayout from '../../layouts/AppLayout.vue'
 import { router, Link } from '@inertiajs/vue3'
 
@@ -6,6 +7,18 @@ defineProps({
     students: Array,
 })
 
+/* ✅search variable */
+const search = ref('')
+
+/*  search function */
+const searchStudent = () => {
+    router.get('/students', 
+        { search: search.value }, 
+        { preserveState: true }
+    )
+}
+
+/*  delete function */
 const deleteStudent = (id) => {
     if (confirm('Are you sure you want to delete this student?')) {
         router.delete(`/students/${id}`)
@@ -20,7 +33,20 @@ const deleteStudent = (id) => {
             <h1 class="mb-6 text-3xl font-bold text-gray-800">
                 Students List
             </h1>
+<div class="mb-4 flex gap-2">
+    <input
+        v-model="search"
+        placeholder="Search by name or email..."
+        class="border px-3 py-2 rounded w-64"
+    />
 
+    <button
+        @click="searchStudent"
+        class="bg-blue-500 text-white px-4 py-2 rounded"
+    >
+        Search
+    </button>
+</div>
             <div class="overflow-x-auto bg-white shadow rounded-xl">
                 <table class="w-full text-left border-collapse">
                     <thead class="bg-gray-100">
