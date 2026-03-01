@@ -10,6 +10,7 @@ const form = useForm({
     email: props.student.email,
     age: props.student.age,
     university: props.student.university,
+    department: props.student.department,
 });
 
 function submit() {
@@ -67,6 +68,17 @@ function submit() {
             </label>
             <input
               v-model="form.university"
+              type="text"
+              class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
+            />
+          </div>
+
+           <div>
+            <label class="block text-sm font-semibold text-gray-600 mb-1">
+              Department
+            </label>
+            <input
+              v-model="form.department"
               type="text"
               class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />

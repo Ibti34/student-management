@@ -11,5 +11,6 @@ class Student extends Model
         'email',
         'age',
         'university',
+        'department',
     ];
 }

@@ -35,11 +35,12 @@ class StudentController extends Controller
             'email' => 'required|email',
             'age' => 'required|integer|min:1',
             'university' => 'required|string|max:255',
+            'department' => 'required|string|max:255',
         ]);
 
         Student::create($data);
 
-        return redirect()->route('students.Index');
+        return redirect()->route('students.index');
     }
 
     public function edit(Student $student)
@@ -53,6 +54,22 @@ class StudentController extends Controller
     {
         $student->delete();
 
-        return redirect()->route('students.Index');
+        return redirect()->route('students.index');
+    }
+
+
+    public function update(Request $request, Student $student)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'age' => 'required|integer|min:1',
+            'university' => 'required|string|max:255',
+            'department' => 'required|string|max:255',
+        ]);
+
+        $student->update($data);
+
+        return redirect()->route('students.index');
     }
 }

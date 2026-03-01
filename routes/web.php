@@ -22,14 +22,10 @@ Route::get('/about', function () {
 
 
 
-Route::post('/student', function () {
+// Route::post('/student', function () {
 
-    dd(request()->all());
-});
-
-Route::get('/contact', function () {
-    return Inertia::render('Contact');
-});
+//     dd(request()->all());
+// });
 
 
 Route::get('/home', function () {
@@ -37,8 +33,8 @@ Route::get('/home', function () {
 });
 
 
-Route::get('/students', [StudentController::class, 'index'])
-    ->name('students.Index');
+Route::get('/students', [StudentController::class, 'Index'])
+    ->name('students.index');
 
 Route::get('/students/create', [StudentController::class, 'create']);
 
@@ -49,3 +45,6 @@ Route::get('/students/{student}/edit', [StudentController::class, 'edit'])
 
 Route::delete('/students/{student}', [StudentController::class, 'destroy'])
     ->name('students.destroy');
+
+Route::put('/students/{student}', [StudentController::class, 'update'])
+    ->name('students.update');

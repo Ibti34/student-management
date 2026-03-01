@@ -2,6 +2,7 @@
 import HomeLayout from '@/layouts/HomeLayout.vue'
 import { Link } from '@inertiajs/vue3'
 import heroImage from '@/../images/home-page-img.png'
+import AppLayout from '@/layouts/AppLayout.vue';
 defineOptions({
   layout: HomeLayout
 })
@@ -17,7 +18,7 @@ defineOptions({
       alt="Background"
     />
 
-    <!-- Overlay -->
+     <!-- Overlay  -->
     <div class="absolute inset-0 bg-black/50"></div>
 
     <!-- Content -->

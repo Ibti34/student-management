@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email');
             $table->integer('age');
             $table->string('university');
+            $table->string('department');
+
 
             $table->timestamps();
         });

@@ -7,10 +7,10 @@ defineProps({
     students: Array,
 })
 
-/* ✅search variable */
+//  search variable 
 const search = ref('')
 
-/*  search function */
+//  search function 
 const searchStudent = () => {
     router.get('/students', 
         { search: search.value }, 
@@ -18,7 +18,7 @@ const searchStudent = () => {
     )
 }
 
-/*  delete function */
+//  delete function 
 const deleteStudent = (id) => {
     if (confirm('Are you sure you want to delete this student?')) {
         router.delete(`/students/${id}`)
@@ -56,6 +56,7 @@ const deleteStudent = (id) => {
                             <th class="p-3">Email</th>
                             <th class="p-3">Age</th>
                             <th class="p-3">University</th>
+                             <th class="p-3">department</th>
                             <th class="p-3 text-center">Actions</th>
                         </tr>
                     </thead>
@@ -71,6 +72,8 @@ const deleteStudent = (id) => {
                             <td class="p-3">{{ student.email }}</td>
                             <td class="p-3">{{ student.age }}</td>
                             <td class="p-3">{{ student.university }}</td>
+                             <td class="p-3">{{ student.department }}</td>
+
 
                             <td class="p-3 text-center space-x-2">
                                 <!-- Edit -->

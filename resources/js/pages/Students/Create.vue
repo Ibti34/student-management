@@ -7,6 +7,7 @@ const form = useForm({
     email: '',
     age: '',
     university: '',
+    department:'',
 });
 
 function submit() {
@@ -25,9 +26,12 @@ function submit() {
       </h2>
 
       <form @submit.prevent="submit" class="space-y-6">
-
+<div v-if="Object.keys(form.errors).length" class="bg-red-100 p-4 mb-4">
+    <pre>{{ form.errors }}</pre>
+</div>
         <!-- Name -->
-        <div>
+        
+<div>
           <label class="block text-sm font-medium text-gray-600 mb-2">
             Name
           </label>
@@ -38,7 +42,6 @@ function submit() {
             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
           />
         </div>
-
         <!-- Email -->
         <div>
           <label class="block text-sm font-medium text-gray-600 mb-2">
@@ -74,6 +77,18 @@ function submit() {
             v-model="form.university"
             type="text"
             placeholder="Enter university name"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+          />
+        </div>
+        <!-- departement -->
+        <div>
+          <label class="block text-sm font-medium text-gray-600 mb-2">
+            Department
+          </label>
+          <input
+            v-model="form.department"
+            type="text"
+            placeholder="Enter your department"
             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
           />
         </div>
