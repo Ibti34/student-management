@@ -1,50 +1,51 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Laravel\Fortify\Features;
+
 use App\Http\Controllers\StudentController;
 
-
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 Route::get('/', function () {
     return Inertia::render('Home');
 });
-
-Route::get('dashboard', function () {
+Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-require __DIR__ . '/settings.php';
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__ . '/auth.php';
+
+
 Route::get('/about', function () {
     return Inertia::render('About');
-});
+})->name('about');
 
 
+Route::resource('students', StudentController::class);
 
-// Route::post('/student', function () {
-
-//     dd(request()->all());
-// });
-
-
-Route::get('/home', function () {
-    return Inertia::render('Home');
-});
-
-
-Route::get('/students', [StudentController::class, 'Index'])
-    ->name('students.index');
-
-Route::get('/students/create', [StudentController::class, 'create']);
-
-Route::post('/students', [StudentController::class, 'store']);
-
-Route::get('/students/{student}/edit', [StudentController::class, 'edit'])
-    ->name('students.edit');
-
-Route::delete('/students/{student}', [StudentController::class, 'destroy'])
-    ->name('students.destroy');
-
-Route::put('/students/{student}', [StudentController::class, 'update'])
-    ->name('students.update');
+Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
+Route::post('/students', [StudentController::class, 'store'])->name('students.store');
+Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
+Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
+Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
+Route::patch('/students/{student}', [StudentController::class, 'update'])->name('students.update');
+Route::get('/students/{student}', [StudentController::class, 'show'])->name('students.show');
+Route::get('/students/search', [StudentController::class, 'search'])->name('students.search');
+Route::get('/students/filter', [StudentController::class, 'filter'])->name('students.filter');
