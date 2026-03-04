@@ -2,9 +2,9 @@
 import HomeLayout from '@/layouts/HomeLayout.vue'
 import { Link } from '@inertiajs/vue3'
 import heroImage from '@/../images/home-page-img.png'
-import AppLayout from '@/layouts/AppLayout.vue';
+import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue'
 defineOptions({
-  layout: HomeLayout
+  layout: AuthenticatedLayout
 })
 </script>
 

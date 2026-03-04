@@ -12,6 +12,7 @@ import { Link } from '@inertiajs/vue3';
             <Link href="/students/create">Add Student</Link>
 
             <Link href="/students">Students List</Link>
+           
         </div>
         <!-- PAGE CONTENT -->
         <div class="p-6">
