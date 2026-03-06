@@ -6,14 +6,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-/*
-|--------------------------------------------------------------------------
-| Public Routes
-|--------------------------------------------------------------------------
-*/
 
 // Welcome page (shows login/register if not logged in)
-Route::get('/', function () {
+Route::get('/welcome', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -27,12 +22,6 @@ Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
 
-
-/*
-|--------------------------------------------------------------------------
-| Authenticated Routes
-|--------------------------------------------------------------------------
-*/
 
 Route::middleware(['auth'])->group(function () {
 

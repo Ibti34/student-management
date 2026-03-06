@@ -12,5 +12,6 @@ class Student extends Model
         'age',
         'university',
         'department',
+        'role',
     ];
 }
