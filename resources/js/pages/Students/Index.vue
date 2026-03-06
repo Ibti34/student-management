@@ -4,7 +4,7 @@ import AppLayout from '../../layouts/AppLayout.vue'
 import { router, Link, usePage } from '@inertiajs/vue3'
 
 const page = usePage()
-const user = page.props.auth.user || {}
+const user = page.props.auth.user 
 
 defineProps({
     students: Array,
@@ -67,7 +67,7 @@ Search
 <th class="p-3">Age</th>
 <th class="p-3">University</th>
 <th class="p-3">Department</th>
-<th class="p-3 ">Actions</th>
+<th v-if="user.role === 'admin'">Actions</th>
 </tr>
 </thead>
 
@@ -86,11 +86,10 @@ class="border-t hover:bg-gray-50"
 <td class="p-3">{{ student.university }}</td>
 <td class="p-3">{{ student.department }}</td>
 
-<td class="p-3 text-center space-x-2">
+<td v-if="user.role === 'admin'" class="p-3 text-center space-x-2">
 
 <!-- Edit -->
 <Link
-v-if="user.role === 'admin'"
 :href="route('students.edit', student.id)"
 class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
 >
@@ -99,7 +98,6 @@ Edit
 
 <!-- Delete -->
 <button
-v-if="user.role === 'admin'"
 @click="deleteStudent(student.id)"
 class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
 >
@@ -107,7 +105,6 @@ Delete
 </button>
 
 </td>
-
 </tr>
 
 </tbody>
