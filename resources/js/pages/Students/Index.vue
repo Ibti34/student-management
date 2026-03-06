@@ -67,7 +67,9 @@ Search
 <th class="p-3">Age</th>
 <th class="p-3">University</th>
 <th class="p-3">Department</th>
-<th v-if="user.role === 'admin'">Actions</th>
+<th v-if="user.role === 'admin'" class="p-3 text-center space-x-2">
+Actions
+</th>
 </tr>
 </thead>
 
@@ -91,7 +93,7 @@ class="border-t hover:bg-gray-50"
 <!-- Edit -->
 <Link
 :href="route('students.edit', student.id)"
-class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-200 transition"
 >
 Edit
 </Link>
@@ -99,16 +101,16 @@ Edit
 <!-- Delete -->
 <button
 @click="deleteStudent(student.id)"
-class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+class="bg-red-100 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-200 transition"
 >
 Delete
 </button>
 
 </td>
+
 </tr>
 
 </tbody>
-
 </table>
 
 </div>
