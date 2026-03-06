@@ -13,19 +13,7 @@ import { Link } from '@inertiajs/vue3'
           SMS
         </h1>
 
-        <div class="space-x-6">
-          <Link href="/" class="text-gray-700 hover:text-indigo-600 font-medium">
-            Home
-          </Link>
-
-          <Link href="/about" class="text-gray-700 hover:text-indigo-600 font-medium">
-            About
-          </Link>
-
-          <Link href="/students" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
-            Dashboard
-          </Link>
-        </div>
+    
 
       </div>
     </nav>

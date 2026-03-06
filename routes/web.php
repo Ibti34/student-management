@@ -33,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard (optional)
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
-    })->name('dashboard');
+    })->middleware(['auth'])->name('dashboard');
 
     // Students Resource Routes
     Route::resource('students', StudentController::class);

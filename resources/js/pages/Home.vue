@@ -2,9 +2,9 @@
 import HomeLayout from '@/layouts/HomeLayout.vue'
 import { Link } from '@inertiajs/vue3'
 import heroImage from '@/../images/home-page-img.png'
-import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue'
+
 defineOptions({
-  layout: AuthenticatedLayout
+  layout: HomeLayout
 })
 </script>
 
@@ -18,7 +18,7 @@ defineOptions({
       alt="Background"
     />
 
-     <!-- Overlay  -->
+    <!-- Overlay -->
     <div class="absolute inset-0 bg-black/50"></div>
 
     <!-- Content -->
@@ -34,19 +34,21 @@ defineOptions({
       </p>
 
       <div class="flex justify-center gap-6">
+
         <Link
-          href="/students"
+          :href="route('dashboard')"
           class="bg-indigo-600 px-8 py-3 rounded-lg shadow hover:bg-indigo-700 transition"
         >
           Go to Dashboard
         </Link>
 
         <Link
-          href="/about"
+          :href="route('about')"
           class="border border-white px-8 py-3 rounded-lg hover:bg-white hover:text-black transition"
         >
           Learn More
         </Link>
+
       </div>
 
     </div>
