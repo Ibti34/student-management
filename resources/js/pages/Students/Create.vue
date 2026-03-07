@@ -73,24 +73,34 @@ function submit() {
           <label class="block text-sm font-medium text-gray-600 mb-2">
             University
           </label>
-          <input
-            v-model="form.university"
-            type="text"
-            placeholder="Enter university name"
-            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
-          />
+         <select
+  v-model="form.university"
+  class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
+>
+  <option value="">Select University</option>
+  <option value="Addis Ababa University">Addis Ababa University</option>
+  <option value="Adama Science and Technology University">Adama Science and Technology University</option>
+  <option value="Jimma University">Jimma University</option>
+  <option value="Bahir Dar University">Bahir Dar University</option>
+  <option value="Hawassa University">Hawassa University</option>
+  <option value="Mekelle University">Mekelle University</option>
+  <option value="Dire Dawa University">Dire Dawa University</option>
+  <option value="Debre Berhan University">Debre Berhan University</option>
+  <option value="Arba Minch University">Arba Minch University</option>
+  <option value="Wolaita Sodo University">Wolaita Sodo University</option>
+</select>
         </div>
         <!-- departement -->
         <div>
           <label class="block text-sm font-medium text-gray-600 mb-2">
             Department
           </label>
-          <input
-            v-model="form.department"
-            type="text"
-            placeholder="Enter your department"
-            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
-          />
+        <select v-model="form.department" class="w-full border rounded-lg px-4 py-2">
+  <option value="">Select Department</option>
+  <option value="sw">Software Engineering</option>
+  <option value="comp">Computer Science</option>
+  <option value="accounting">Accounting</option>
+</select>
         </div>
 
         <!-- Button -->

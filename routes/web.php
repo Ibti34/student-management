@@ -5,7 +5,7 @@ use App\Http\Controllers\StudentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
+use App\Http\Controllers\DepartmentController;
 
 // Welcome page (shows login/register if not logged in)
 Route::get('/welcome', function () {
@@ -44,5 +44,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+Route::get('/departments', [DepartmentController::class, 'index']);
+Route::post('/departments', [DepartmentController::class, 'store']);
+Route::delete('/departments/{id}', [DepartmentController::class, 'destroy']);
 
 require __DIR__ . '/auth.php';
