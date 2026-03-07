@@ -19,7 +19,6 @@ const open = ref(false)
             <Link href="/">Home</Link>
             <Link href="/about">About</Link>
             <Link href="/students/create">Add Student</Link>
-            <Link href="/departments">Departments</Link>
             <Link href="/students">Students List</Link>
         </div>
 

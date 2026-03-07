@@ -5,7 +5,8 @@ use App\Http\Controllers\StudentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\DepartmentController;
+use App\Models\Student;
+use App\Models\User;
 
 // Welcome page (shows login/register if not logged in)
 Route::get('/welcome', function () {
@@ -31,10 +32,13 @@ Route::middleware(['auth'])->group(function () {
     })->middleware(['auth'])->name('home');
 
     // Dashboard (optional)
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->middleware(['auth'])->name('dashboard');
 
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard', [
+            'studentsCount' => Student::count(),
+            'usersCount' => User::count(),
+        ]);
+    })->middleware(['auth'])->name('dashboard');
     // Students Resource Routes
     Route::resource('students', StudentController::class);
 
@@ -45,8 +49,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::get('/departments', [DepartmentController::class, 'index']);
-Route::post('/departments', [DepartmentController::class, 'store']);
-Route::delete('/departments/{id}', [DepartmentController::class, 'destroy']);
+
 
 require __DIR__ . '/auth.php';
