@@ -34,6 +34,7 @@ class StudentController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'age' => 'required|integer|min:1',
+            'phone' => 'required|numeric',
             'university' => 'required|string|max:255',
             'department' => 'required|string|max:255',
         ]);
@@ -64,6 +65,7 @@ class StudentController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'age' => 'required|integer|min:1',
+            'phone' => 'required|numeric',
             'university' => 'required|string|max:255',
             'department' => 'required|string|max:255',
         ]);

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->integer('age');
+            $table->bigInteger('phone')->unsigned();
             $table->string('university');
             $table->string('department');
 

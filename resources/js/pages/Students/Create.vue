@@ -6,6 +6,7 @@ const form = useForm({
     name: '',
     email: '',
     age: '',
+    phone: '',
     university: '',
     department:'',
 });
@@ -67,7 +68,18 @@ function submit() {
             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
           />
         </div>
-
+<!-- phone number -->
+  <div>
+          <label class="block text-sm font-medium text-gray-600 mb-2">
+          phone number
+          </label>
+          <input
+            v-model="form.phone "
+            type="number"
+            placeholder="Enter phone number"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+          />
+        </div>
         <!-- University -->
         <div>
           <label class="block text-sm font-medium text-gray-600 mb-2">
@@ -94,12 +106,13 @@ function submit() {
         <div>
           <label class="block text-sm font-medium text-gray-600 mb-2">
             Department
-          </label>
-        <select v-model="form.department" class="w-full border rounded-lg px-4 py-2">
+            </label>
+      <select v-model="form.department" class="w-full border rounded-lg px-4 py-2">
   <option value="">Select Department</option>
-  <option value="sw">Software Engineering</option>
-  <option value="comp">Computer Science</option>
-  <option value="accounting">Accounting</option>
+  <option value="Software Engineering">Software Engineering</option>
+  <option value="Computer Science">Computer Science</option>
+  <option value="Information Systems">Information Systems</option>
+  <option value="UI/UX Design">UI/UX Design</option>
 </select>
         </div>
 

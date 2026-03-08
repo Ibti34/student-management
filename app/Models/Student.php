@@ -10,6 +10,7 @@ class Student extends Model
         'name',
         'email',
         'age',
+        'phone',
         'university',
         'department',
         'role',
