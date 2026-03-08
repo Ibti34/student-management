@@ -16,9 +16,10 @@ const open = ref(false)
 
         <!-- LEFT MENU -->
         <div class="space-x-4">
-            <Link href="/">Home</Link>
-            <Link href="/about">About</Link>
-            <Link href="/students/create">Add Student</Link>
+             <Link :href="route('dashboard')" >
+         Dashboard
+        </Link>
+          
             <Link href="/students">Students List</Link>
         </div>
 
