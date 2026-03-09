@@ -64,13 +64,11 @@ autocomplete="username"
 <div class="mt-4">
 <InputLabel for="role" value="Role" />
 
-<select
-id="role"
-v-model="form.role"
-class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
->
-<option value="user">User</option>
+<select v-model="form.role" class="border rounded w-full p-2">
+<option value="">Select Role</option>
 <option value="admin">Admin</option>
+<option value="teacher">Teacher</option>
+<option value="student">Student</option>
 </select>
 
 <InputError class="mt-2" :message="form.errors.role" />

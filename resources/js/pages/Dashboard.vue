@@ -58,22 +58,6 @@ Total Users
 <!-- ACTION CARDS -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-<!-- ADD STUDENT -->
-<Link
-:href="route('students.create')"
-class="bg-gray-200 rounded-xl p-6 shadow hover:shadow-lg transition"
->
-
-<h3 class="text-indigo-600 font-bold text-lg mb-3">
-Add Student
-</h3>
-
-<p class="text-gray-700">
-Create and register a new student in the system.
-</p>
-
-</Link>
-
 
 <!-- STUDENT LIST -->
 <Link

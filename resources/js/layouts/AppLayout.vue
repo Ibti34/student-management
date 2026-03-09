@@ -21,7 +21,17 @@ const open = ref(false)
         </Link>
           
             <Link href="/students">Students List</Link>
+
+            <!-- attendance -->
+<Link
+v-if="$page.props.auth.user.role === 'admin' || $page.props.auth.user.role === 'teacher'"
+:href="route('attendance.index')"
+>
+Attendance
+</Link>
         </div>
+
+
 
         <!-- RIGHT PROFILE -->
         <div class="relative" v-if="user">

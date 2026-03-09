@@ -15,4 +15,9 @@ class Student extends Model
         'department',
         'role',
     ];
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }
