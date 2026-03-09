@@ -45,7 +45,8 @@ Route::middleware(['auth'])->group(function () {
 
     // attendance
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
-    Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
+    Route::post('/attendance/bulk', [AttendanceController::class, 'storeBulk'])
+        ->name('attendance.bulk');
     Route::delete('/attendance/{attendance}', [AttendanceController::class, 'destroy'])->name('attendance.destroy');
 
     // Profile Routes

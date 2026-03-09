@@ -21,27 +21,25 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function storeBulk(Request $request)
     {
-        $request->validate([
-            'student_id' => 'required',
-            'date' => 'required',
-            'status' => 'required'
-        ]);
+        $date = $request->date;
+        $records = $request->attendance; // array: [student_id => status]
 
-        \App\Models\Attendance::updateOrCreate(
-            [
-                'student_id' => $request->student_id,
-                'date' => $request->date
-            ],
-            [
-                'status' => $request->status
-            ]
-        );
+        foreach ($records as $studentId => $status) {
+            \App\Models\Attendance::updateOrCreate(
+                [
+                    'student_id' => $studentId,
+                    'date' => $date
+                ],
+                [
+                    'status' => $status
+                ]
+            );
+        }
 
         return redirect()->back()->with('success', 'Attendance saved successfully!');
     }
-
     public function destroy($id)
     {
         $attendance = Attendance::findOrFail($id);
