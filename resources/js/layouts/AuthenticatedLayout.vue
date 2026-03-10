@@ -5,10 +5,14 @@ import Dropdown from '@/components/Dropdown.vue'
 import DropdownLink from '@/components/DropdownLink.vue'
 import NavLink from '@/components/NavLink.vue'
 import ResponsiveNavLink from '@/components/ResponsiveNavLink.vue'
-import { Link } from '@inertiajs/vue3'
+import { Link, router } from '@inertiajs/vue3'
 import profileImage from '@/../images/profile-img.png'
 
 const showingNavigationDropdown = ref(false)
+
+function logout() {
+    router.post('/logout')
+}
 </script>
 
 <template>
@@ -98,11 +102,14 @@ Profile
 </DropdownLink>
 
 <DropdownLink
-:href="route('logout')"
-method="post"
-as="button"
+
+    :href="route('logout')"
+    method="post"
+    as="button"
 >
-Log Out
+    Logout
+
+
 </DropdownLink>
 
 </template>
@@ -213,11 +220,12 @@ Profile
 </ResponsiveNavLink>
 
 <ResponsiveNavLink
-:href="route('logout')"
-method="post"
-as="button"
+   :href="route('logout')"
+    method="post"
+    as="button"
+    class="text-red-500"
 >
-Log Out
+    Logout
 </ResponsiveNavLink>
 
 </div>

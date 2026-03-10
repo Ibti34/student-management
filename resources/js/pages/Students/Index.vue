@@ -4,7 +4,7 @@ import AppLayout from '../../layouts/AppLayout.vue'
 import { router, Link, usePage } from '@inertiajs/vue3'
 
 const page = usePage()
-const user = page.props.auth.user
+const user = page.props.auth.user 
 
 defineProps({
     students: Array,
@@ -32,7 +32,6 @@ const deleteStudent = (id) => {
 
 <template>
 <AppLayout>
-
 <div class="p-6">
 
 <h1 class="mb-6 text-3xl font-bold text-gray-800">
@@ -55,19 +54,18 @@ Search
 </button>
 </div>
 
-<!-- Add Student (Admin Only) -->
-<div class="mb-4 flex justify-end">
+<!-- add student -->
+<div class="mb-4 flex gap-2 justify-end">
 
-<Link
-v-if="user.role === 'admin'"
-href="/students/create"
-class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
->
-Add Student
-</Link>
+    <Link
+    v-if="user.role === 'admin'"
+    href="/students/create"
+    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+    >
+        Add Student
+    </Link>
 
 </div>
-
 <!-- Table -->
 <div class="overflow-x-auto bg-white shadow rounded-xl">
 
@@ -75,7 +73,6 @@ Add Student
 
 <thead class="bg-gray-100">
 <tr>
-
 <th class="p-3">ID</th>
 <th class="p-3">Name</th>
 <th class="p-3">Email</th>
@@ -83,14 +80,10 @@ Add Student
 <th class="p-3">Phone</th>
 <th class="p-3">University</th>
 <th class="p-3">Department</th>
-
-<th
-v-if="user.role === 'admin'"
-class="p-3 text-center"
->
+<th class="p-3">role</th>
+<th v-if="user.role === 'admin'" class="p-3 text-center space-x-2">
 Actions
 </th>
-
 </tr>
 </thead>
 
@@ -110,10 +103,7 @@ class="border-t hover:bg-gray-50"
 <td class="p-3">{{ student.university }}</td>
 <td class="p-3">{{ student.department }}</td>
 
-<td
-v-if="user.role === 'admin'"
-class="p-3 text-center space-x-2"
->
+<td v-if="user.role === 'admin'" class="p-3 text-center space-x-2">
 
 <!-- Edit -->
 <Link
@@ -141,6 +131,5 @@ Delete
 </div>
 
 </div>
-
 </AppLayout>
 </template>

@@ -3,25 +3,28 @@ import { Link } from '@inertiajs/vue3'
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+<div>
 
-    <!-- Navbar -->
-    <nav class="bg-white shadow-md">
-      <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        
-        <h1 class="text-xl font-bold text-indigo-600">
-          SMS
-        </h1>
+<!-- Navbar -->
+<nav class="flex justify-between items-center px-10 py-4 bg-white shadow">
 
-    
+<h1 class="text-xl font-bold">
+Student Management
+</h1>
 
-      </div>
-    </nav>
+<div class="space-x-4">
+<Link href="/login" class="text-blue-600">Login</Link>
+<Link href="/register" class="bg-blue-600 text-white px-4 py-2 rounded">
+Register
+</Link>
+</div>
 
-    <!-- Page Content -->
-    <main>
-      <slot />
-    </main>
+</nav>
 
-  </div>
+<!-- Page content -->
+<main>
+<slot />
+</main>
+
+</div>
 </template>

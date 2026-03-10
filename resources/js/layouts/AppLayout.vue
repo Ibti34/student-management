@@ -11,67 +11,88 @@ const open = ref(false)
 <template>
 <div>
 
-    <!-- NAVBAR -->
-    <div class="flex justify-between items-center bg-gray-800 p-4 text-white">
+<!-- NAVBAR -->
+<div class="flex justify-between items-center bg-gray-800 p-4 text-white">
 
-        <!-- LEFT MENU -->
-        <div class="space-x-4">
-             <Link :href="route('dashboard')" >
-         Dashboard
-        </Link>
-          
-            <Link href="/students">Students List</Link>
+<!-- LEFT MENU -->
+<div class="space-x-4">
 
-            <!-- attendance -->
+<Link :href="route('dashboard')">
+Dashboard
+</Link>
+
+<Link :href="route('students.index')">
+Students
+</Link>
+
+<!-- ADMIN / TEACHER -->
 <Link
-v-if="$page.props.auth.user.role === 'admin' || $page.props.auth.user.role === 'teacher'"
+v-if="user.role === 'admin' || user.role === 'teacher'"
 :href="route('attendance.index')"
 >
 Attendance
 </Link>
-        </div>
 
+<Link
+v-if="user.role === 'admin' || user.role === 'teacher'"
+:href="route('attendance.history')"
+>
+Attendance History
+</Link>
 
+<!-- STUDENT ONLY -->
+<Link
+v-if="user.role === 'student'"
+:href="route('attendance.my')"
+>
+My Attendance
+</Link>
 
-        <!-- RIGHT PROFILE -->
-        <div class="relative" v-if="user">
-            <button
-                @click="open = !open"
-                class="flex items-center gap-2"
-            >
-                <span>{{ user.name }}</span>
-                ▼
-            </button>
+</div>
 
-            <!-- DROPDOWN -->
-            <div v-if="open"
-                 class="absolute right-0 mt-2 w-40 bg-white text-black rounded shadow">
+<!-- RIGHT PROFILE -->
+<div class="relative" v-if="user">
 
-                <Link
-                    href="/profile"
-                    class="block px-4 py-2 hover:bg-gray-100"
-                >
-                    Profile
-                </Link>
+<button
+@click="open = !open"
+class="flex items-center gap-2"
+>
+<span>{{ user.name }}</span>
+▼
+</button>
 
-                <Link
-                    href="/logout"
-                    method="post"
-                    as="button"
-                    class="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                >
-                    Log Out
-                </Link>
+<!-- DROPDOWN -->
+<div
+v-if="open"
+class="absolute right-0 mt-2 w-40 bg-white text-black rounded shadow"
+>
 
-            </div>
-        </div>
+<Link
+:href="route('profile.edit')"
+class="block px-4 py-2 hover:bg-gray-100"
+>
+Profile
+</Link>
 
-    </div>
+<Link
+:href="route('logout')"
+method="post"
+as="button"
+class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+>
+Log Out
+</Link>
 
-    <!-- PAGE CONTENT -->
-    <div class="p-6">
-        <slot />
-    </div>
+</div>
+
+</div>
+
+</div>
+
+<!-- PAGE CONTENT -->
+<div class="p-6">
+<slot />
+</div>
 
 </div>
 </template>

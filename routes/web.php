@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\AttendanceController;
@@ -9,15 +10,17 @@ use Inertia\Inertia;
 use App\Models\Student;
 use App\Models\User;
 
-// Welcome page (shows login/register if not logged in)
-Route::get('/welcome', function () {
+
+// | Public Routes
+
+
+// Welcome page
+Route::get('/', function () {
     return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-})->name('welcome');
+});
 
 // About page
 Route::get('/about', function () {
@@ -25,36 +28,62 @@ Route::get('/about', function () {
 })->name('about');
 
 
+// | Protected Routes (Login Required)
+
+
 Route::middleware(['auth'])->group(function () {
 
-    // Home page after login
-    Route::get('/', function () {
-        return Inertia::render('Home');
-    })->middleware(['auth'])->name('home');
 
-    // Dashboard (optional)
+    // | Dashboard
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard', [
             'studentsCount' => Student::count(),
             'usersCount' => User::count(),
         ]);
-    })->middleware(['auth'])->name('dashboard');
-    // Students Resource Routes
+    })->name('dashboard');
+
+
+    // | Students
+
     Route::resource('students', StudentController::class);
 
-    // attendance
-    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+
+
+    // | Attendance
+
+
+    // Mark attendance page
+    Route::get('/attendance', [AttendanceController::class, 'index'])
+        ->name('attendance.index');
+
+    // Save attendance
     Route::post('/attendance/bulk', [AttendanceController::class, 'storeBulk'])
         ->name('attendance.bulk');
-    Route::delete('/attendance/{attendance}', [AttendanceController::class, 'destroy'])->name('attendance.destroy');
 
-    // Profile Routes
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Attendance history (Admin / Teacher)
+    Route::get('/attendance/history', [AttendanceController::class, 'history'])
+        ->name('attendance.history');
+
+    // Student personal attendance
+    Route::get('/my-attendance', [AttendanceController::class, 'myAttendance'])
+        ->name('attendance.my');
+
+    // Delete attendance
+    Route::delete('/attendance/{attendance}', [AttendanceController::class, 'destroy'])
+        ->name('attendance.destroy');
+
+
+    // profile
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::delete('/profile', [ProfileController::class, 'destroy'])
+        ->name('profile.destroy');
 });
-
 
 
 require __DIR__ . '/auth.php';
