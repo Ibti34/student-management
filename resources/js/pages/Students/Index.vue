@@ -48,7 +48,7 @@ class="border px-3 py-2 rounded w-64"
 
 <button
 @click="searchStudent"
-class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+class="bg-black text-white px-4 py-2 rounded hover:bg-black-600"
 >
 Search
 </button>
@@ -80,8 +80,7 @@ Search
 <th class="p-3">Phone</th>
 <th class="p-3">University</th>
 <th class="p-3">Department</th>
-<th class="p-3">role</th>
-<th v-if="user.role === 'admin'" class="p-3 text-center space-x-2">
+<th v-if="user.role === 'admin'" class="p-3 text-center space-x-2 text-align-center">
 Actions
 </th>
 </tr>
@@ -102,6 +101,7 @@ class="border-t hover:bg-gray-50"
 <td class="p-3">{{ student.phone }}</td>
 <td class="p-3">{{ student.university }}</td>
 <td class="p-3">{{ student.department }}</td>
+<td class="p-3">{{ student.user_id }}</td>
 
 <td v-if="user.role === 'admin'" class="p-3 text-center space-x-2">
 

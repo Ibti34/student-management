@@ -43,6 +43,7 @@ function submit() {
             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
           />
         </div>
+      
         <!-- Email -->
         <div>
           <label class="block text-sm font-medium text-gray-600 mb-2">

@@ -14,10 +14,18 @@ class Student extends Model
         'university',
         'department',
         'role',
+        'user_id',
     ];
 
+    // Student → User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Student → Attendance
     public function attendances()
     {
-        return $this->hasMany(Attendance::class);
+        return $this->hasMany(\App\Models\Attendance::class);
     }
 }

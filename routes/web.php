@@ -59,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Save attendance
     Route::post('/attendance/bulk', [AttendanceController::class, 'storeBulk'])
-        ->name('attendance.bulk');
+        ->name('attendance.storeBulk');
 
     // Attendance history (Admin / Teacher)
     Route::get('/attendance/history', [AttendanceController::class, 'history'])

@@ -18,6 +18,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'user_id'
     ];
 
 
@@ -35,5 +36,10 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+    public function student()
+    {
+        return $this->hasOne(Student::class);
     }
 }
