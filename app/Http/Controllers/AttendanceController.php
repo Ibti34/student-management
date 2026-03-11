@@ -85,38 +85,41 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
-        // Safety check: Ensure user has a student profile
-        if (!$user || !$user->student) {
+        // The scope in Student.php handles the identity check
+        $student = Student::where('email', $user->email)
+            ->where('name', $user->name)
+            ->first();
+
+        if (!$student) {
             return Inertia::render('Attendance/MyAttendance', [
                 'attendance' => (object)[],
-                'daysInMonth' => now()->daysInMonth
+                'daysInMonth' => now()->daysInMonth,
+                'studentName' => $user->name
             ]);
         }
 
         $month = $request->input('month', now()->month);
         $year = $request->input('year', now()->year);
 
-        $dateContext = Carbon::createFromDate($year, $month, 1);
-        $daysInMonth = $dateContext->daysInMonth;
-
-        $attendanceRecords = Attendance::where('student_id', $user->student->id)
+        // Fetch and format so keys are pure integers (1, 2, 3...)
+        $attendanceRecords = $student->attendances()
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->get()
-            ->keyBy(function ($item) {
-                // Return integer day for easy lookup in Vue
-                return (int) Carbon::parse($item->date)->format('d');
-            });
+            ->mapWithKeys(function ($item) {
+                $day = (int) \Carbon\Carbon::parse($item->date)->format('j'); // 'j' = day without leading zeros
+                return [$day => $item];
+            })
+            ->toArray(); // Convert to array to ensure clean JSON object
 
         return Inertia::render('Attendance/MyAttendance', [
-            'attendance' => $attendanceRecords,
-            'daysInMonth' => $daysInMonth,
-            'currentMonth' => $dateContext->format('F'),
+            'attendance' => (object)$attendanceRecords, // Cast to object for JS key access
+            'daysInMonth' => \Carbon\Carbon::createFromDate($year, $month)->daysInMonth,
+            'currentMonth' => \Carbon\Carbon::createFromDate($year, $month)->format('F'),
             'currentYear' => $year,
-            'studentName' => $user->name
+            'studentName' => $student->name
         ]);
     }
-
     /**
      * Delete a specific attendance record
      */

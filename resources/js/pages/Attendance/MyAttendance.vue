@@ -9,14 +9,10 @@ const props = defineProps({
     studentName: String
 })
 
-/**
- * Safer data lookup.
- * This ensures that even if 'day' is a number and the 
- * key is a string (or vice versa), it finds the record.
- */
+
 const getStatus = (day) => {
-    // Check if the day exists in the attendance object
-    const record = props.attendance[day] || props.attendance[String(day).padStart(2, '0')] || props.attendance[Number(day)];
+    // If props.attendance is { "11": {...} }, this finds it correctly
+    const record = props.attendance[day] || props.attendance[String(day)];
     return record ? record.status : null;
 }
 </script>
@@ -37,6 +33,8 @@ const getStatus = (day) => {
 
             <div class="bg-white border rounded-lg shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
+
+    
                     <table class="w-full text-sm text-left border-collapse">
                         <thead class="bg-gray-100 text-gray-700 uppercase font-bold text-xs">
                             <tr>
@@ -52,15 +50,12 @@ const getStatus = (day) => {
                                     Attendance
                                 </td>
                                 
-                                <td v-for="day in daysInMonth" :key="day" class="p-2 border-l text-center h-12">
-                                    <template v-let="status = getStatus(day)">
-                                        <span v-if="getStatus(day) === 'present'" class="text-green-600 font-black text-lg">P</span>
-                                        <span v-else-if="getStatus(day) === 'late'" class="text-yellow-500 font-black text-lg">L</span>
-                                        <span v-else-if="getStatus(day) === 'absent'" class="text-red-600 font-black text-lg">A</span>
-                                        <span v-else class="text-gray-200">-</span>
-                                    </template>
-                                </td>
-                            </tr>
+                             <td v-for="day in daysInMonth" :key="day" class="p-2 border-l text-center h-12">
+    <div v-if="getStatus(day) === 'present'" class="text-green-600 font-black text-lg">P</div>
+    <div v-else-if="getStatus(day) === 'late'" class="text-yellow-500 font-black text-lg">L</div>
+    <div v-else-if="getStatus(day) === 'absent'" class="text-red-600 font-black text-lg">A</div>
+    <div v-else class="text-gray-200">-</div>
+</td>   </tr>
                         </tbody>
                     </table>
                 </div>
@@ -76,7 +71,7 @@ const getStatus = (day) => {
 </template>
 
 <style scoped>
-/* Ensure columns have a consistent width */
+
 th, td {
     min-width: 35px;
 }
