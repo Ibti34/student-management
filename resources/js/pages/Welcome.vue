@@ -70,12 +70,11 @@ const user = page.props.auth?.user
       </template>
 
       <Link
-        :href="route('about')"
-        class="border border-white px-8 py-3 rounded-lg hover:bg-white hover:text-black transition"
-      >
-        Learn More
-      </Link>
-
+  href="/about"
+  class="border border-white px-8 py-3 rounded-lg hover:bg-white hover:text-black transition"
+>
+  Learn More
+</Link>
     </div>
 
   </div>
