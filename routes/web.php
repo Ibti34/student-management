@@ -35,14 +35,13 @@ Route::middleware(['auth'])->group(function () {
 
 
     // | Dashboard
-
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard', [
             'studentsCount' => Student::count(),
             'usersCount' => User::count(),
+            'registeredUsers' => User::latest()->get(),
         ]);
     })->name('dashboard');
-
 
     // | Students
 
