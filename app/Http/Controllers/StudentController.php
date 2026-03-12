@@ -12,10 +12,13 @@ class StudentController extends Controller
     {
         $students = Student::query()
             ->when($request->search, function ($query, $search) {
+                // FIXED: Changed =>orWhere to ->orWhere
                 $query->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             })
-            ->get();
+            ->orderBy('id', 'asc')
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('Students/Index', [
             'students' => $students,
@@ -51,14 +54,6 @@ class StudentController extends Controller
         ]);
     }
 
-    public function destroy(Student $student)
-    {
-        $student->delete();
-
-        return redirect()->route('students.index');
-    }
-
-
     public function update(Request $request, Student $student)
     {
         $data = $request->validate([
@@ -71,6 +66,13 @@ class StudentController extends Controller
         ]);
 
         $student->update($data);
+
+        return redirect()->route('students.index');
+    }
+
+    public function destroy(Student $student)
+    {
+        $student->delete();
 
         return redirect()->route('students.index');
     }
