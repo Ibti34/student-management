@@ -10,7 +10,6 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
     protected $fillable = [
@@ -18,9 +17,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-
     ];
-
 
     protected $hidden = [
         'password',
@@ -38,8 +35,26 @@ class User extends Authenticatable
         ];
     }
 
+    // Student relationship
     public function student()
     {
         return $this->hasOne(Student::class);
+    }
+
+    // Role helper functions
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isTeacher()
+    {
+        return $this->role === 'teacher';
+    }
+
+    public function isStudent()
+    {
+        return $this->role === 'student';
     }
 }

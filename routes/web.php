@@ -11,7 +11,6 @@ use App\Models\Student;
 use App\Models\User;
 
 
-// | Public Routes
 
 
 // Welcome page
@@ -30,7 +29,6 @@ Route::get('/about', function () {
 
 // | Protected Routes (Login Required)
 
-
 Route::middleware(['auth'])->group(function () {
 
 
@@ -42,6 +40,8 @@ Route::middleware(['auth'])->group(function () {
             'registeredUsers' => User::latest()->get(),
         ]);
     })->name('dashboard');
+
+
 
     // | Students
 

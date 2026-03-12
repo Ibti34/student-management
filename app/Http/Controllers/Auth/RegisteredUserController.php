@@ -31,8 +31,25 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
-            'role' => 'required'
+            'role' => 'required',
+            'passkey' => 'nullable'
         ]);
+
+        // secret codes
+        $adminCode = 'ADMIN123';
+        $teacherCode = 'TEACH123';
+
+        if ($request->role === 'admin' && $request->passkey !== $adminCode) {
+            return back()->withErrors([
+                'passkey' => 'Invalid admin passkey'
+            ]);
+        }
+
+        if ($request->role === 'teacher' && $request->passkey !== $teacherCode) {
+            return back()->withErrors([
+                'passkey' => 'Invalid teacher passkey'
+            ]);
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -44,6 +61,7 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+
         return redirect()->route('dashboard');
     }
 }

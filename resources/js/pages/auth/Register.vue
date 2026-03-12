@@ -11,8 +11,9 @@ const form = useForm({
     email: '',
     password: '',
     password_confirmation: '',
-    role: 'user'
-});
+    role: 'student',
+    passkey: '',
+})
 
 const submit = () => {
     form.post(route('register'), {
@@ -72,6 +73,21 @@ autocomplete="username"
 </select>
 
 <InputError class="mt-2" :message="form.errors.role" />
+</div>
+
+<!-- Passkey (for Admin / Teacher) -->
+<div class="mt-4" v-if="form.role === 'admin' || form.role === 'teacher'">
+<InputLabel for="passkey" value="Admin / Teacher Passkey" />
+
+<TextInput
+id="passkey"
+type="text"
+class="mt-1 block w-full"
+v-model="form.passkey"
+placeholder="Enter special passkey"
+/>
+
+<InputError class="mt-2" :message="form.errors.passkey" />
 </div>
 
 <!-- Password -->

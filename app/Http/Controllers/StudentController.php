@@ -12,14 +12,12 @@ class StudentController extends Controller
     {
         $students = Student::query()
             ->when($request->search, function ($query, $search) {
-                // FIXED: Changed =>orWhere to ->orWhere
                 $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%"); // FIXED: Changed => to ->
             })
             ->orderBy('id', 'asc')
             ->paginate(10)
             ->withQueryString();
-
         return Inertia::render('Students/Index', [
             'students' => $students,
             'filters' => $request->only('search'),
@@ -40,6 +38,7 @@ class StudentController extends Controller
             'phone' => 'required|numeric',
             'university' => 'required|string|max:255',
             'department' => 'required|string|max:255',
+            'role' => 'required|string|in:student,teacher,admin',
         ]);
 
         Student::create($data);
@@ -63,6 +62,7 @@ class StudentController extends Controller
             'phone' => 'required|numeric',
             'university' => 'required|string|max:255',
             'department' => 'required|string|max:255',
+            'role' => 'required|string|in:student,teacher,admin',
         ]);
 
         $student->update($data);
