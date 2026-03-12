@@ -1,5 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import AppLayout from '../../layouts/AppLayout.vue'; // Added missing import
 
 const props = defineProps({
@@ -13,6 +14,7 @@ const form = useForm({
     phone: props.student.phone,
     university: props.student.university,
     department: props.student.department,
+    role: props.student.role,
 });
 
 function submit() {

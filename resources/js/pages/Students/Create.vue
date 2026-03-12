@@ -9,6 +9,7 @@ const form = useForm({
     phone: '',
     university: '',
     department:'',
+    role: 'student',
 });
 
 function submit() {
