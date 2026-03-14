@@ -8,13 +8,7 @@ use App\Models\Subject;
 
 class Mark extends Model
 {
-    protected $fillable = [
-        'student_id',
-        'subject_id',
-        'score',
-        'teacher_id',
-        'term'
-    ];
+    protected $fillable = ['student_id', 'subject_id', 'score', 'teacher_id', 'term'];
 
     public function subject()
     {

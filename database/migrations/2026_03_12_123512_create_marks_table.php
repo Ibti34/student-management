@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::create('marks', function (Blueprint $table) {
             $table->id();
-            // Link to the user who is the student
             $table->foreignId('student_id')->constrained('users')->onDelete('cascade');
-            // Link to the actual subject record
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
+            $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
             $table->integer('score');
             $table->string('term')->default('Term 1');
-            // Who gave the mark
-            $table->foreignId('teacher_id')->constrained('users');
             $table->timestamps();
         });
     }

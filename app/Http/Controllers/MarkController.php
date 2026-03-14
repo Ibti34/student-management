@@ -10,33 +10,18 @@ use Inertia\Inertia;
 
 class MarkController extends Controller
 {
-    /**
-     * Display the marks management page.
-     */
     public function index()
     {
         return Inertia::render('Marks/Index', [
-            // We fetch Users with the 'student' role because your migration 
-            // links student_id to the users table.
-            'students' => User::where('role', 'student')->get(['id', 'name']),
-
-            'subjects' => Subject::all(['id', 'name']),
-
-            // Load marks with their related student (User) and subject
+            // Filters only users with the 'student' role
+            'students' => User::where('role', 'student')->select('id', 'name')->get(),
+            'subjects' => Subject::select('id', 'name')->get(),
             'marks'    => Mark::with(['student', 'subject'])->latest()->get(),
         ]);
     }
 
-    /**
-     * Save or update a student's mark.
-     */
     public function store(Request $request)
     {
-        // Security check
-        if (auth()->user()->role !== 'teacher') {
-            abort(403, 'Only teachers can enter marks.');
-        }
-
         $validated = $request->validate([
             'student_id' => 'required|exists:users,id',
             'subject_id' => 'required|exists:subjects,id',
@@ -44,7 +29,6 @@ class MarkController extends Controller
             'term'       => 'nullable|string',
         ]);
 
-        // Use updateOrCreate to prevent duplicate entries for the same student/subject
         Mark::updateOrCreate(
             [
                 'student_id' => $validated['student_id'],
@@ -53,39 +37,22 @@ class MarkController extends Controller
             ],
             [
                 'score'      => $validated['score'],
-                'teacher_id' => auth()->id(), // Automatically grab the logged-in teacher's ID
+                'teacher_id' => auth()->id(),
             ]
         );
 
-        return redirect()->back()->with('message', 'Mark recorded successfully!');
+        return redirect()->back()->with('message', 'Mark saved!');
     }
 
-    /**
-     * Remove a mark from the database.
-     */
-    public function destroy($id)
+    public function update(Request $request, Mark $mark)
     {
-        // Security: Only teachers can delete marks
-        if (auth()->user()->role !== 'teacher') {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $mark = Mark::findOrFail($id);
-        $mark->delete();
-
-        return redirect()->back()->with('message', 'Mark deleted successfully.');
-    }
-    public function update(Request $request, $id)
-    {
-        $mark = Mark::findOrFail($id);
-
-        $mark->update([
-            'student_id' => $request->student_id,
-            'subject_id' => $request->subject_id,
-            'score' => $request->score,
-            'term' => $request->term
-        ]);
-
+        $mark->update($request->all());
         return redirect()->back()->with('message', 'Mark updated');
+    }
+
+    public function destroy(Mark $mark)
+    {
+        $mark->delete();
+        return redirect()->back()->with('message', 'Mark deleted');
     }
 }

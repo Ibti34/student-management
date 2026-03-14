@@ -57,4 +57,11 @@ class User extends Authenticatable
     {
         return $this->role === 'student';
     }
+
+    // mark 
+
+    public function marks()
+    {
+        return $this->hasMany(Mark::class, 'student_id');
+    }
 }

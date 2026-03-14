@@ -87,10 +87,14 @@ Route::middleware(['auth'])->group(function () {
 
 // marks
 
+// | Marks Management
 Route::middleware(['auth'])->group(function () {
+    // ... existing attendance and profile routes ...
+
+    // Marks Management Routes
     Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
     Route::post('/marks', [MarkController::class, 'store'])->name('marks.store');
-    Route::put('/marks/{id}', [MarkController::class, 'update'])->name('marks.update');
-    Route::delete('/marks/{id}', [MarkController::class, 'destroy'])->name('marks.destroy');
+    Route::put('/marks/{mark}', [MarkController::class, 'update'])->name('marks.update');
+    Route::delete('/marks/{mark}', [MarkController::class, 'destroy'])->name('marks.destroy');
 });
 require __DIR__ . '/auth.php';
