@@ -2,26 +2,28 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\Subject;
 
 class Mark extends Model
 {
-    protected $fillable = ['student_id', 'subject_id', 'score', 'teacher_id', 'term'];
+    use HasFactory;
 
-    public function subject()
-    {
-        return $this->belongsTo(Subject::class);
-    }
+    protected $fillable = [
+        'student_id',
+        'subject_id',
+        'score',
+        'term',
+        'teacher_id'
+    ];
 
     public function student()
     {
         return $this->belongsTo(User::class, 'student_id');
     }
 
-    public function teacher()
+    public function subject()
     {
-        return $this->belongsTo(User::class, 'teacher_id');
+        return $this->belongsTo(Subject::class);
     }
 }

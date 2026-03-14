@@ -12,11 +12,43 @@ class MarkController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+
+        // Teachers see all, Students see only theirs
+        $marks = Mark::with(['student', 'subject'])
+            ->when($user->role === 'student', function ($query) use ($user) {
+                return $query->where('student_id', $user->id);
+            })
+            ->latest()
+            ->get();
+
+        $students = $user->role === 'teacher'
+            ? User::where('role', 'student')->select('id', 'name')->get()
+            : [];
+
         return Inertia::render('Marks/Index', [
-            // Filters only users with the 'student' role
-            'students' => User::where('role', 'student')->select('id', 'name')->get(),
-            'subjects' => Subject::select('id', 'name')->get(),
-            'marks'    => Mark::with(['student', 'subject'])->latest()->get(),
+            'marks' => $marks,
+            'students' => $students,
+            'subjects' => Subject::all(),
+            'user_role' => $user->role,
+        ]);
+    }
+
+    // THIS IS THE METHOD THAT WAS MISSING
+    public function myMarks()
+    {
+        $user = auth()->user();
+
+        $marks = Mark::with(['student', 'subject'])
+            ->where('student_id', $user->id)
+            ->latest()
+            ->get();
+
+        return Inertia::render('Marks/Index', [
+            'marks' => $marks,
+            'students' => [],
+            'subjects' => Subject::all(),
+            'user_role' => $user->role,
         ]);
     }
 
@@ -25,34 +57,35 @@ class MarkController extends Controller
         $validated = $request->validate([
             'student_id' => 'required|exists:users,id',
             'subject_id' => 'required|exists:subjects,id',
-            'score'      => 'required|integer|min:0|max:100',
-            'term'       => 'nullable|string',
+            'score' => 'required|integer|min:0|max:100',
+            'term' => 'nullable|string',
         ]);
 
-        Mark::updateOrCreate(
-            [
-                'student_id' => $validated['student_id'],
-                'subject_id' => $validated['subject_id'],
-                'term'       => $request->term ?? 'Term 1',
-            ],
-            [
-                'score'      => $validated['score'],
-                'teacher_id' => auth()->id(),
-            ]
-        );
+        Mark::create(array_merge($validated, [
+            'teacher_id' => auth()->id(),
+            'term' => $validated['term'] ?? 'Term 1'
+        ]));
 
-        return redirect()->back()->with('message', 'Mark saved!');
+        return redirect()->back();
     }
 
     public function update(Request $request, Mark $mark)
     {
-        $mark->update($request->all());
-        return redirect()->back()->with('message', 'Mark updated');
+        $validated = $request->validate([
+            'student_id' => 'required|exists:users,id',
+            'subject_id' => 'required|exists:subjects,id',
+            'score' => 'required|integer|min:0|max:100',
+            'term' => 'nullable|string',
+        ]);
+
+        $mark->update($validated);
+
+        return redirect()->back();
     }
 
     public function destroy(Mark $mark)
     {
         $mark->delete();
-        return redirect()->back()->with('message', 'Mark deleted');
+        return redirect()->back();
     }
 }

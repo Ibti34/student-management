@@ -85,13 +85,14 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-// marks
+
 
 // | Marks Management
 Route::middleware(['auth'])->group(function () {
-    // ... existing attendance and profile routes ...
+    // Specific student route
+    Route::get('/my-marks', [MarkController::class, 'myMarks'])->name('marks.my');
 
-    // Marks Management Routes
+    // General routes
     Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
     Route::post('/marks', [MarkController::class, 'store'])->name('marks.store');
     Route::put('/marks/{mark}', [MarkController::class, 'update'])->name('marks.update');
