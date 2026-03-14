@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Student;
 use App\Models\User;
-
+use App\Http\Controllers\MarkController;
 
 
 
@@ -85,4 +85,12 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+// marks
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
+    Route::post('/marks', [MarkController::class, 'store'])->name('marks.store');
+    Route::put('/marks/{id}', [MarkController::class, 'update'])->name('marks.update');
+    Route::delete('/marks/{id}', [MarkController::class, 'destroy'])->name('marks.destroy');
+});
 require __DIR__ . '/auth.php';

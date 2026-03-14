@@ -149,6 +149,23 @@ const toggleUserList = () => {
                         </p>
                     </Link>
 
+                    <Link 
+    v-if="user.role === 'admin' || user.role === 'teacher' || user.role === 'student'"
+    :href="route('marks.index')" 
+    class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group"
+>
+    <div class="h-14 w-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-rose-600 group-hover:text-white transition-all">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+        </svg>
+    </div>
+    <h4 class="text-xl font-black text-slate-900">
+        {{ user.role === 'student' ? 'My Grades' : 'Student Marks' }}
+    </h4>
+    <p class="text-sm text-slate-400 mt-2">
+        {{ user.role === 'teacher' ? 'Update and manage student scores.' : 'View academic performance results.' }}
+    </p>
+</Link>
                 </div>
             </div>
         </div>
