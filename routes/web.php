@@ -30,20 +30,26 @@ Route::get('/about', function () {
 // | Protected Routes (Login Required)
 
 Route::middleware(['auth'])->group(function () {
-
-
-    // | Dashboard
+    // Dashboard
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard', [
-            // Change this line to count Users with the 'student' role:
-            'studentsCount' => User::where('role', 'student')->count(),
+        // Get daily attendance for the last 7 days
+        $attendanceData = \App\Models\Attendance::selectRaw('DATE(date) as day, COUNT(*) as count')
+            ->where('status', 'present')
+            ->where('date', '>=', now()->subDays(7))
+            ->groupBy('day')
+            ->orderBy('day', 'asc')
+            ->get();
 
+        return Inertia::render('Dashboard', [
+            'studentsCount' => User::where('role', 'student')->count(),
             'usersCount' => User::count(),
             'registeredUsers' => User::latest()->get(),
+            'attendanceChartData' => [
+                'labels' => $attendanceData->pluck('day'),
+                'datasets' => $attendanceData->pluck('count'),
+            ],
         ]);
     })->name('dashboard');
-
-
 
     // | Students
 

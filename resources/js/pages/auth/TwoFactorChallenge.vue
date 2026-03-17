@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useForm, Head } from '@inertiajs/vue3';
 // Fixed: Added 'type' for TwoFactorConfigContent to help the TS linter
-import { computed, ref } from 'vue';
+import { computed, ref, type Ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
