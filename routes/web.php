@@ -35,7 +35,9 @@ Route::middleware(['auth'])->group(function () {
     // | Dashboard
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard', [
-            'studentsCount' => Student::count(),
+            // Change this line to count Users with the 'student' role:
+            'studentsCount' => User::where('role', 'student')->count(),
+
             'usersCount' => User::count(),
             'registeredUsers' => User::latest()->get(),
         ]);

@@ -21,7 +21,7 @@ const toggleUserList = () => {
 
 <template>
     <AuthenticatedLayout>
-        <Head title="Admin Dashboard" />
+        <Head title="Dashboard" />
 
         <div class="min-h-screen bg-[#f8fafc] px-4 py-12 text-slate-900">
             <div class="max-w-6xl mx-auto">
@@ -35,7 +35,10 @@ const toggleUserList = () => {
                     </div>
                 </header>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div 
+                    class="grid grid-cols-1 gap-8 mb-12"
+                    :class="user.role !== 'student' ? 'md:grid-cols-2' : 'max-w-md'"
+                >
                     
                     <div class="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 border border-white flex justify-between items-center">
                         <div>
@@ -48,6 +51,7 @@ const toggleUserList = () => {
                     </div>
 
                     <button 
+                        v-if="user.role !== 'student'"
                         @click="toggleUserList"
                         class="bg-slate-900 rounded-[2.5rem] p-8 shadow-2xl shadow-slate-900/20 text-white flex justify-between items-center text-left transition-all hover:bg-indigo-950 active:scale-95 group relative overflow-hidden"
                     >
@@ -72,7 +76,7 @@ const toggleUserList = () => {
                     leave-from-class="transform scale-100 opacity-100 translate-y-0"
                     leave-to-class="transform scale-95 opacity-0 -translate-y-8"
                 >
-                    <div v-if="showUserList && user.role === 'admin'" class="mb-16">
+                    <div v-if="showUserList && user.role !== 'student'" class="mb-16">
                         <div class="bg-white rounded-[3rem] shadow-2xl shadow-indigo-100 border border-indigo-50 overflow-hidden">
                             <div class="p-10 border-b border-slate-50 flex justify-between items-center">
                                 <h3 class="text-2xl font-black text-slate-800">User Registry</h3>
@@ -150,22 +154,21 @@ const toggleUserList = () => {
                     </Link>
 
                     <Link 
-    v-if="user.role === 'admin' || user.role === 'teacher' || user.role === 'student'"
-    :href="route('marks.index')" 
-    class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group"
->
-    <div class="h-14 w-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-rose-600 group-hover:text-white transition-all">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-        </svg>
-    </div>
-    <h4 class="text-xl font-black text-slate-900">
-        {{ user.role === 'student' ? 'My Grades' : 'Student Marks' }}
-    </h4>
-    <p class="text-sm text-slate-400 mt-2">
-        {{ user.role === 'teacher' ? 'Update and manage student scores.' : 'View academic performance results.' }}
-    </p>
-</Link>
+                        :href="route('marks.index')" 
+                        class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group"
+                    >
+                        <div class="h-14 w-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-rose-600 group-hover:text-white transition-all">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-black text-slate-900">
+                            {{ user.role === 'student' ? 'My Grades' : 'Student Marks' }}
+                        </h4>
+                        <p class="text-sm text-slate-400 mt-2">
+                            {{ user.role === 'teacher' ? 'Update and manage student scores.' : 'View academic performance results.' }}
+                        </p>
+                    </Link>
                 </div>
             </div>
         </div>
