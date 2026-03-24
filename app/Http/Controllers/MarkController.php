@@ -11,6 +11,11 @@ use Inertia\Inertia;
 
 class MarkController extends Controller
 {
+    private const SEMESTER_LABELS = [
+        'Term 1' => 'Semester 1',
+        'Term 2' => 'Semester 2',
+    ];
+
     private function ensureStaff(Request $request): void
     {
         abort_unless($request->user()?->isAdmin() || $request->user()?->isTeacher(), 403);
@@ -53,7 +58,7 @@ class MarkController extends Controller
             'term' => $validated['semester'],
         ]));
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Result saved successfully.');
     }
 
     public function update(Request $request, Mark $mark)
@@ -72,7 +77,7 @@ class MarkController extends Controller
             'term' => $validated['semester'],
         ]));
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Result updated successfully.');
     }
 
     public function destroy(Request $request, Mark $mark)
@@ -80,7 +85,7 @@ class MarkController extends Controller
         $this->ensureStaff($request);
 
         $mark->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Result deleted successfully.');
     }
 
     private function renderMarksPage(Request $request, User $user, Collection $students)
@@ -101,7 +106,7 @@ class MarkController extends Controller
             'student_id' => $mark->student_id,
             'subject_id' => $mark->subject_id,
             'score' => $mark->score,
-            'semester' => $mark->semester ?: $mark->term ?: 'Semester 1',
+            'semester' => $this->normalizeSemesterLabel($mark->semester ?: $mark->term ?: 'Semester 1'),
             'academic_year' => $mark->academic_year ?: now()->format('Y').'/'.now()->addYear()->format('Y'),
             'student' => $mark->student ? [
                 'id' => $mark->student->id,
@@ -128,6 +133,7 @@ class MarkController extends Controller
             : null;
 
         [$semesterSummaries, $transcriptSummary] = $this->buildTranscriptSummary($marks, $selectedStudent);
+        $studentResults = $this->buildStudentResults($marks);
 
         $availableAcademicYears = Mark::query()
             ->select('academic_year')
@@ -143,6 +149,8 @@ class MarkController extends Controller
             ->distinct()
             ->orderBy('semester')
             ->pluck('semester')
+            ->map(fn ($semester) => $this->normalizeSemesterLabel($semester))
+            ->unique()
             ->values();
 
         return Inertia::render('Marks/Index', [
@@ -163,6 +171,7 @@ class MarkController extends Controller
             ] : null,
             'semesterSummaries' => $semesterSummaries,
             'transcriptSummary' => $transcriptSummary,
+            'studentResults' => $studentResults,
             'filters' => [
                 'student_id' => $selectedStudentId,
                 'semester' => $request->string('semester')->toString(),
@@ -193,7 +202,7 @@ class MarkController extends Controller
                     'credits' => $group->sum(fn ($mark) => $mark['subject']['credit_hours'] ?? 0),
                     'average_score' => round($group->avg('score'), 2),
                     'gpa' => round($weightedPoints / $totalCredits, 2),
-                    'passes' => $group->where('score', '>=', 50)->count(),
+                    'passes' => $group->where('score', '>=', 40)->count(),
                 ];
             })
             ->sortBy([
@@ -222,8 +231,74 @@ class MarkController extends Controller
                 'credits' => $marks->sum(fn ($mark) => $mark['subject']['credit_hours'] ?? 0),
                 'average_score' => round($marks->avg('score'), 2),
                 'gpa' => round($cumulativeWeightedPoints / $totalCredits, 2),
-                'passed_courses' => $marks->where('score', '>=', 50)->count(),
+                'passed_courses' => $marks->where('score', '>=', 40)->count(),
             ],
         ];
+    }
+
+    private function buildStudentResults(Collection $marks): Collection
+    {
+        return $marks
+            ->groupBy('student_id')
+            ->map(function (Collection $studentMarks) {
+                $student = $studentMarks->first()['student'];
+                $totalCredits = max((int) $studentMarks->sum(fn ($mark) => $mark['subject']['credit_hours'] ?? 0), 1);
+                $weightedPoints = $studentMarks->sum('weighted_points');
+
+                $semesters = $studentMarks
+                    ->groupBy(fn ($mark) => $mark['academic_year'].'|'.$mark['semester'])
+                    ->map(function (Collection $semesterMarks, string $key) {
+                        [$academicYear, $semester] = explode('|', $key);
+                        $credits = $semesterMarks->sum(fn ($mark) => $mark['subject']['credit_hours'] ?? 0);
+                        $totalCredits = max((int) $credits, 1);
+                        $weightedPoints = $semesterMarks->sum('weighted_points');
+
+                        return [
+                            'academic_year' => $academicYear,
+                            'semester' => $semester,
+                            'gpa' => round($weightedPoints / $totalCredits, 2),
+                            'average_score' => round($semesterMarks->avg('score'), 2),
+                            'credits' => $credits,
+                            'courses' => $semesterMarks
+                                ->sortBy('subject.name')
+                                ->map(fn ($mark) => [
+                                    'id' => $mark['id'],
+                                    'subject_name' => $mark['subject']['name'] ?? '-',
+                                    'subject_code' => $mark['subject']['code'],
+                                    'credit_hours' => $mark['subject']['credit_hours'],
+                                    'score' => $mark['score'],
+                                    'letter_grade' => $mark['letter_grade'],
+                                    'grade_points' => $mark['grade_points'],
+                                    'status_label' => $mark['status_label'],
+                                    'semester' => $mark['semester'],
+                                    'academic_year' => $mark['academic_year'],
+                                    'student_id' => $mark['student_id'],
+                                    'subject_id' => $mark['subject_id'],
+                                ])
+                                ->values(),
+                        ];
+                    })
+                    ->sortBy([
+                        ['academic_year', 'desc'],
+                        ['semester', 'asc'],
+                    ])
+                    ->values();
+
+                return [
+                    'student' => $student,
+                    'cumulative_gpa' => round($weightedPoints / $totalCredits, 2),
+                    'cumulative_average' => round($studentMarks->avg('score'), 2),
+                    'total_credits' => $studentMarks->sum(fn ($mark) => $mark['subject']['credit_hours'] ?? 0),
+                    'total_courses' => $studentMarks->count(),
+                    'semesters' => $semesters,
+                ];
+            })
+            ->sortBy(fn ($entry) => strtolower($entry['student']['name'] ?? ''))
+            ->values();
+    }
+
+    private function normalizeSemesterLabel(string $semester): string
+    {
+        return self::SEMESTER_LABELS[$semester] ?? $semester;
     }
 }

@@ -44,9 +44,9 @@ test('students can view their transcript summary on the marks page', function ()
         ->assertInertia(fn (Assert $page) => $page
             ->component('Marks/Index')
             ->where('user_role', 'student')
-            ->where('transcriptSummary.gpa', 3.5)
+            ->where('transcriptSummary.gpa', 4)
             ->where('transcriptSummary.passed_courses', 1)
-            ->where('marks.0.letter_grade', 'B+')
+            ->where('marks.0.letter_grade', 'A')
             ->where('marks.0.subject.code', 'UIX302')
         );
 });

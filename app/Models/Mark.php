@@ -38,12 +38,16 @@ class Mark extends Model
     public function getLetterGradeAttribute(): string
     {
         return match (true) {
-            $this->score >= 90 => 'A',
-            $this->score >= 80 => 'B+',
+            $this->score >= 90 => 'A+',
+            $this->score >= 85 => 'A',
+            $this->score >= 80 => 'A-',
+            $this->score >= 75 => 'B+',
             $this->score >= 70 => 'B',
+            $this->score >= 65 => 'B-',
             $this->score >= 60 => 'C+',
             $this->score >= 50 => 'C',
-            $this->score >= 45 => 'D',
+            $this->score >= 45 => 'C-',
+            $this->score >= 40 => 'D',
             default => 'F',
         };
     }
@@ -52,17 +56,21 @@ class Mark extends Model
     {
         return match (true) {
             $this->score >= 90 => 4.0,
-            $this->score >= 80 => 3.5,
+            $this->score >= 85 => 4.0,
+            $this->score >= 80 => 3.75,
+            $this->score >= 75 => 3.5,
             $this->score >= 70 => 3.0,
+            $this->score >= 65 => 2.75,
             $this->score >= 60 => 2.5,
             $this->score >= 50 => 2.0,
-            $this->score >= 45 => 1.0,
+            $this->score >= 45 => 1.75,
+            $this->score >= 40 => 1.0,
             default => 0.0,
         };
     }
 
     public function getStatusLabelAttribute(): string
     {
-        return $this->score >= 50 ? 'PASS' : 'FAIL';
+        return $this->score >= 40 ? 'PASS' : 'FAIL';
     }
 }
