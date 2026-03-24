@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\SchoolClass;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,8 +24,10 @@ class StudentFactory extends Factory
             'phone' => fake()->phoneNumber(),
             'university' => 'Addis Ababa University', // Example value
             'department' => 'Software Engineering',   // Example value
+            'year_of_study' => fake()->numberBetween(1, 5),
             'role' => 'student',
             'user_id' => \App\Models\User::factory(), // This links a user automatically
+            'school_class_id' => SchoolClass::factory(),
         ];
     }
 }

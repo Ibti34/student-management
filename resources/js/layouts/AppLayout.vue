@@ -1,19 +1,16 @@
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3'
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const page = usePage()
 
-// Computed property to track the authenticated user reactively
 const user = computed(() => page.props.auth?.user)
-
 const open = ref(false)
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-100">
     <nav class="flex justify-between items-center bg-gray-800 p-4 text-white shadow-md">
-      
       <div class="space-x-4 flex items-center">
         <Link :href="route('about')" class="hover:text-gray-300 font-medium">
           About
@@ -24,8 +21,20 @@ const open = ref(false)
             Dashboard
           </Link>
 
-          <Link :href="route('students.index')" class="hover:text-gray-300 font-medium">
-            Students
+          <Link
+            v-if="user.role === 'admin' || user.role === 'teacher' || user.role === 'student'"
+            :href="route('students.index')"
+            class="hover:text-gray-300 font-medium"
+          >
+            {{ user.role === 'student' ? 'My Info' : 'Students' }}
+          </Link>
+
+          <Link
+            v-if="user.role === 'admin' || user.role === 'teacher'"
+            :href="route('classes.index')"
+            class="hover:text-gray-300 font-medium"
+          >
+            Cohorts
           </Link>
 
           <template v-if="user.role === 'admin' || user.role === 'teacher'">
@@ -70,7 +79,7 @@ const open = ref(false)
             class="flex items-center gap-2 focus:outline-none hover:text-gray-300 transition-colors"
           >
             <span class="capitalize">{{ user.name }}</span>
-            <span :class="{'rotate-180': open}" class="transition-transform duration-200 text-xs">▼</span>
+            <span :class="{ 'rotate-180': open }" class="transition-transform duration-200 text-xs">▼</span>
           </button>
 
           <div
@@ -111,7 +120,6 @@ const open = ref(false)
 </template>
 
 <style scoped>
-/* Ensure the dropdown stays above other content */
 .z-50 {
   z-index: 50;
 }

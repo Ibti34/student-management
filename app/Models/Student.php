@@ -17,8 +17,10 @@ class Student extends Model
         'phone',
         'university',
         'department',
+        'year_of_study',
         'role',
         'user_id',
+        'school_class_id',
     ];
 
     public function user()
@@ -31,17 +33,26 @@ class Student extends Model
         return $this->hasMany(\App\Models\Attendance::class);
     }
 
+    public function schoolClass()
+    {
+        return $this->belongsTo(SchoolClass::class);
+    }
+
     protected static function booted()
     {
         static::addGlobalScope('verified_identity', function (Builder $builder) {
             if (Auth::check()) {
                 $user = Auth::user();
 
-                // If the logged-in user is NOT an admin and NOT a teacher,
-                // then restrict them to only seeing their own record.
                 if ($user->role !== 'admin' && $user->role !== 'teacher') {
-                    $builder->where('email', $user->email)
-                        ->where('name', $user->name);
+                    $builder->where(function (Builder $query) use ($user) {
+                        $query->where('user_id', $user->id)
+                            ->orWhere(function (Builder $fallback) use ($user) {
+                                $fallback->whereNull('user_id')
+                                    ->where('email', $user->email)
+                                    ->where('name', $user->name);
+                            });
+                    });
                 }
             }
         });

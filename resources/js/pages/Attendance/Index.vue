@@ -6,12 +6,15 @@ import { useForm, router } from '@inertiajs/vue3'
 const props = defineProps({
     students: Array,
     attendanceRecords: Object, // This comes from your Index method
-    selectedDate: String
+    selectedDate: String,
+    classes: Array,
+    selectedClassId: [String, Number, null],
 })
 
 // 1. Initialize the form with a proper object structure
 const form = useForm({
     date: props.selectedDate || new Date().toISOString().split('T')[0],
+    class_id: props.selectedClassId || '',
     // This creates an object like { "1": "present", "2": "late" }
     attendance: props.students.reduce((acc, student) => {
         acc[student.id] = props.attendanceRecords?.[student.id]?.status || ''
@@ -21,7 +24,14 @@ const form = useForm({
 
 // 2. Refresh page data when the date is changed
 watch(() => form.date, (newDate) => {
-    router.get(route('attendance.index'), { date: newDate }, {
+    router.get(route('attendance.index'), { date: newDate, class_id: form.class_id }, {
+        preserveState: true,
+        replace: true
+    })
+})
+
+watch(() => form.class_id, (newClassId) => {
+    router.get(route('attendance.index'), { date: form.date, class_id: newClassId }, {
         preserveState: true,
         replace: true
     })
@@ -58,11 +68,19 @@ const submitAttendance = () => {
             
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-bold text-gray-800 tracking-tight">Daily Attendance</h1>
-                <input 
-                    type="date" 
-                    v-model="form.date" 
-                    class="border border-gray-300 rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none" 
-                />
+                <div class="flex gap-3">
+                    <select v-model="form.class_id" class="border border-gray-300 rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                        <option value="">All cohorts</option>
+                        <option v-for="schoolClass in classes" :key="schoolClass.id" :value="schoolClass.id">
+                            {{ schoolClass.name }} {{ schoolClass.section }}
+                        </option>
+                    </select>
+                    <input 
+                        type="date" 
+                        v-model="form.date" 
+                        class="border border-gray-300 rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none" 
+                    />
+                </div>
             </div>
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -87,7 +105,10 @@ const submitAttendance = () => {
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         <tr v-for="student in students" :key="student.id" class="hover:bg-gray-50 transition-colors">
-                            <td class="p-4 font-medium text-gray-700">{{ student.name }}</td>
+                            <td class="p-4 font-medium text-gray-700">
+                                <div>{{ student.name }}</div>
+                                <div class="text-xs text-gray-500">{{ student.school_class ? `${student.school_class.name} ${student.school_class.section}` : 'Unassigned' }}</div>
+                            </td>
                             
                             <td class="p-4 text-center">
                                 <input 

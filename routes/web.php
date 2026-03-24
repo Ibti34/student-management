@@ -1,38 +1,31 @@
-
 <?php
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\MarkController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\StudentController;
+use App\Models\User;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Models\Student;
-use App\Models\User;
-use App\Http\Controllers\MarkController;
 
-
-
-// Welcome page
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
 
-// About page
 Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
 
-
-// | Protected Routes (Login Required)
-
-Route::middleware(['auth'])->group(function () {
-    // Dashboard
+Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
-        // Get daily attendance for the last 7 days
+        $user = Auth::user();
+
         $attendanceData = \App\Models\Attendance::selectRaw('DATE(date) as day, COUNT(*) as count')
             ->where('status', 'present')
             ->where('date', '>=', now()->subDays(7))
@@ -40,70 +33,47 @@ Route::middleware(['auth'])->group(function () {
             ->orderBy('day', 'asc')
             ->get();
 
+        $attendanceTrend = collect(range(6, 0))
+            ->map(function ($daysAgo) use ($attendanceData) {
+                $day = now()->subDays($daysAgo)->toDateString();
+                $record = $attendanceData->firstWhere('day', $day);
+
+                return [
+                    'label' => now()->subDays($daysAgo)->format('M j'),
+                    'count' => (int) ($record->count ?? 0),
+                ];
+            });
+
         return Inertia::render('Dashboard', [
             'studentsCount' => User::where('role', 'student')->count(),
-            'usersCount' => User::count(),
-            'registeredUsers' => User::latest()->get(),
+            'usersCount' => $user->isStudent() ? 0 : User::count(),
+            'registeredUsers' => $user->isStudent() ? [] : User::latest()->get(),
             'attendanceChartData' => [
-                'labels' => $attendanceData->pluck('day'),
-                'datasets' => $attendanceData->pluck('count'),
+                'labels' => $attendanceTrend->pluck('label'),
+                'datasets' => $attendanceTrend->pluck('count'),
             ],
         ]);
     })->name('dashboard');
 
-    // | Students
-
     Route::resource('students', StudentController::class);
+    Route::resource('classes', SchoolClassController::class)->except('show');
 
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::post('/attendance/bulk', [AttendanceController::class, 'storeBulk'])->name('attendance.storeBulk');
+    Route::get('/attendance/history', [AttendanceController::class, 'history'])->name('attendance.history');
+    Route::get('/my-attendance', [AttendanceController::class, 'myAttendance'])->name('attendance.my');
+    Route::delete('/attendance/{attendance}', [AttendanceController::class, 'destroy'])->name('attendance.destroy');
 
+    Route::get('/profile', [ProfileController::class, 'edit']);
+    Route::patch('/profile', [ProfileController::class, 'update']);
+    Route::delete('/profile', [ProfileController::class, 'destroy']);
 
-    // | Attendance
-
-
-    // Mark attendance page
-    Route::get('/attendance', [AttendanceController::class, 'index'])
-        ->name('attendance.index');
-
-    // Save attendance
-    Route::post('/attendance/bulk', [AttendanceController::class, 'storeBulk'])
-        ->name('attendance.storeBulk');
-
-    // Attendance history (Admin / Teacher)
-    Route::get('/attendance/history', [AttendanceController::class, 'history'])
-        ->name('attendance.history');
-
-    // Student personal attendance
-    Route::get('/my-attendance', [AttendanceController::class, 'myAttendance'])
-        ->name('attendance.my');
-
-    // Delete attendance
-    Route::delete('/attendance/{attendance}', [AttendanceController::class, 'destroy'])
-        ->name('attendance.destroy');
-
-
-    // profile
-    Route::get('/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
-
-    Route::patch('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
-
-    Route::delete('/profile', [ProfileController::class, 'destroy'])
-        ->name('profile.destroy');
-});
-
-
-
-
-// | Marks Management
-Route::middleware(['auth'])->group(function () {
-    // Specific student route
     Route::get('/my-marks', [MarkController::class, 'myMarks'])->name('marks.my');
-
-    // General routes
     Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
     Route::post('/marks', [MarkController::class, 'store'])->name('marks.store');
     Route::put('/marks/{mark}', [MarkController::class, 'update'])->name('marks.update');
     Route::delete('/marks/{mark}', [MarkController::class, 'destroy'])->name('marks.destroy');
 });
-require __DIR__ . '/auth.php';
+
+require __DIR__.'/auth.php';
+require __DIR__.'/settings.php';

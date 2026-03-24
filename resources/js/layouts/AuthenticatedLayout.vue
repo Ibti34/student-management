@@ -49,10 +49,11 @@ Dashboard
 </NavLink>
 
 <NavLink
+v-if="$page.props.auth.user.role === 'admin' || $page.props.auth.user.role === 'teacher' || $page.props.auth.user.role === 'student'"
 :href="route('students.index')"
 :active="route().current('students.index')"
 >
-Students
+{{ $page.props.auth.user.role === 'student' ? 'My Info' : 'Students' }}
 </NavLink>
 
 </div>
@@ -183,10 +184,11 @@ Dashboard
 </ResponsiveNavLink>
 
 <ResponsiveNavLink
+v-if="$page.props.auth.user.role === 'admin' || $page.props.auth.user.role === 'teacher' || $page.props.auth.user.role === 'student'"
 :href="route('students.index')"
 :active="route().current('students.index')"
 >
-Students List
+{{ $page.props.auth.user.role === 'student' ? 'My Info' : 'Students List' }}
 </ResponsiveNavLink>
 
 </div>

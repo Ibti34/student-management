@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Attendance;
+use App\Models\SchoolClass;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,13 +12,25 @@ use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
+    private function ensureStaff(Request $request): void
+    {
+        abort_unless($request->user()?->isAdmin() || $request->user()?->isTeacher(), 403);
+    }
+
     /**
      * Show attendance page (Marking Attendance)
      */
     public function index(Request $request)
     {
+        $this->ensureStaff($request);
+
         $date = $request->date ?? now()->toDateString();
-        $students = Student::all();
+        $students = Student::query()
+            ->with('schoolClass')
+            ->when($request->filled('class_id'), function ($query) use ($request) {
+                $query->where('school_class_id', $request->integer('class_id'));
+            })
+            ->get();
 
         $attendanceRecords = Attendance::where('date', $date)
             ->get()
@@ -26,7 +39,12 @@ class AttendanceController extends Controller
         return Inertia::render('Attendance/Index', [
             'students' => $students,
             'attendanceRecords' => $attendanceRecords,
-            'selectedDate' => $date
+            'selectedDate' => $date,
+            'classes' => SchoolClass::orderBy('academic_year', 'desc')
+                ->orderBy('name')
+                ->orderBy('section')
+                ->get(['id', 'name', 'section', 'academic_year']),
+            'selectedClassId' => $request->input('class_id'),
         ]);
     }
 
@@ -35,13 +53,18 @@ class AttendanceController extends Controller
      */
     public function storeBulk(Request $request)
     {
+        $this->ensureStaff($request);
+
         $request->validate([
             'date' => 'required|date',
-            'attendance' => 'required|array'
+            'attendance' => 'required|array',
+            'attendance.*' => 'nullable|in:present,absent,late',
         ]);
 
         foreach ($request->attendance as $studentId => $status) {
-            if (!$status) continue;
+            if (!$status) {
+                continue;
+            }
 
             Attendance::updateOrCreate(
                 ['student_id' => $studentId, 'date' => $request->date],
@@ -58,6 +81,8 @@ class AttendanceController extends Controller
      */
     public function history(Request $request)
     {
+        $this->ensureStaff($request);
+
         $month = $request->input('month', now()->month);
         $year = $request->input('year', now()->year);
 
@@ -84,10 +109,17 @@ class AttendanceController extends Controller
     public function myAttendance(Request $request)
     {
         $user = Auth::user();
+        abort_unless($user?->isStudent(), 403);
 
-        // The scope in Student.php handles the identity check
-        $student = Student::where('email', $user->email)
-            ->where('name', $user->name)
+        $student = Student::query()
+            ->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->orWhere(function ($fallback) use ($user) {
+                        $fallback->whereNull('user_id')
+                            ->where('email', $user->email)
+                            ->where('name', $user->name);
+                    });
+            })
             ->first();
 
         if (!$student) {
@@ -123,8 +155,10 @@ class AttendanceController extends Controller
     /**
      * Delete a specific attendance record
      */
-    public function destroy(Attendance $attendance)
+    public function destroy(Request $request, Attendance $attendance)
     {
+        $this->ensureStaff($request);
+
         $attendance->delete();
         return redirect()->back()->with('success', 'Attendance deleted successfully');
     }

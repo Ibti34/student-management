@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -29,12 +30,13 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        return app(RedirectIfTwoFactorAuthenticatable::class)->handle($request, function (Request $request) {
+            $request->authenticate();
 
-        $request->session()->regenerate();
+            $request->session()->regenerate();
 
-        // Redirect to dashboard after login
-        return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('dashboard', absolute: false));
+        });
     }
 
     /**

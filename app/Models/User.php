@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Mark::class, 'student_id');
     }
+
+    public function taughtMarks()
+    {
+        return $this->hasMany(Mark::class, 'teacher_id');
+    }
 }
